@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Resource Hub</title>
+<style>
+body {
+font-family: 'Poppins', sans-serif;
+background-color: #EAF2F8;
+margin: 0;
+padding: 0;
+color: #333;
+}
+.header {
+background-color: #154360;
+color: white;
+padding: 20px 0;
+text-align: center;
+font-weight: 600;
+letter-spacing: 1px;
+}
+.header h1 {
+margin: 0;
+font-size: 36px;
+letter-spacing: 2px;
+color: #F1C40F;
+}
+.container {
+margin: 40px auto;
+padding: 20px;
+width: 80%;
+max-width: 1200px;
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+h2 {
+font-size: 24px;
+color: #154360;
+margin-bottom: 10px;
+border-bottom: 2px solid #F1C40F;
+padding-bottom: 5px;
+}
+ul {
+list-style-type: none;
+padding: 0;
+}
+ul li {
+margin-bottom: 10px;
+}
+a {
+text-decoration: none;
+color: #154360;
+font-weight: bold;
+transition: 0.3s;
+}
+a:hover {
+color: #F1C40F;
+text-decoration: underline;
+}
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+th, td {
+padding: 12px;
+border: 1px solid #ddd;
+text-align: left;
+}
+th {
+background-color: #154360;
+color: white;
+}
+td {
+background-color: #F8F9FA;
+}
+tr:nth-child(even) {
+background-color: #E3E7ED;
+}
+tr:hover {
+background-color: #DCE1EB;
+}
+.info-box {
+background-color: #F8F9FA;
+padding: 20px;
+border-left: 4px solid #154360;
+margin-top: 30px;
+font-weight: 400;
+}
+.canvas-container {
+margin-top: 40px;
+text-align: center;
+}
+canvas {
+width: 100%;
+height: 400px;
+background-color: #FFEB3B; /* Yellow background */
+border-radius: 8px;
+border: 2px solid #154360;
+cursor: crosshair;
+}
+.controls {
+margin-bottom: 10px;
+}
+.controls label {
+font-weight: bold;
+}
+.color-picker {
+margin-left: 10px;
+}
+.clear-button {
+background-color: #154360;
+color: white;
+border: none;
+padding: 8px 12px;
+border-radius: 5px;
+cursor: pointer;
+margin-left: 10px;
+font-weight: bold;
+}
+.clear-button:hover {
+background-color: #1A5276;
+}
+.json-container {
+background-color: #F4F4F4;
+padding: 20px;
+margin-top: 40px;
+border-radius: 8px;
+font-family: monospace;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>College Resource Hub</h1>
+</div>
+<div class="container">
+<h2>Useful College Links</h2>
+<ul>
+<li><a href="https://www.nptel.ac.in" target="_blank">NPTEL Courses</a></li>
+<li><a href="https://www.coursera.org" target="_blank">Coursera</a></li>
+<li><a href="https://www.udemy.com" target="_blank">Udemy</a></li>
+</ul>
+<h2>Departments & Faculty</h2>
+<table>
+<tr>
+<th>Department</th>
+<th>Head of Department</th>
+<th>Specialization</th>
+</tr>
+<tr>
+<td>Computer Science</td>
+<td>Dr. A. Kumar</td>
+<td>AI & Machine Learning</td>
+</tr>
+<tr>
+<td>Electronics</td>
+<td>Dr. S. Mehta</td>
+<td>IoT & Embedded Systems</td>
+</tr>
+<tr>
+<td>Mechanical Engineering</td>
+<td>Dr. R. Sharma</td>
+<td>Robotics & Automation</td>
+</tr>
+</table>
+<div class="info-box">
+<p><b>College Resource Hub</b> helps students explore courses, faculty expertise, and academic
+resources. Stay ahead in your learning journey!</p>
+</div>
+<div class="canvas-container">
+<h2>Draw Notes or Diagrams</h2>
+<div class="controls">
+<label>Select Color:</label>
+<input type="color" id="colorPicker" class="color-picker" value="#154360">
+<button id="clearCanvas" class="clear-button">Clear Canvas</button>
+</div>
+<canvas id="myCanvas" width="600" height="400"></canvas>
+</div>
+<div class="json-container">
+<h2>College Details (JSON Format)</h2>
+<pre id="jsonData"></pre>
+</div>
+</div>
+<script>
+// Canvas Drawing with Color Picker
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+let painting = false;
+let brushColor = document.getElementById("colorPicker").value;
+// Set initial background color
+ctx.fillStyle = "#FFEB3B"; // Yellow background
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+function startPosition(e) {
+painting = true;
+draw(e);
+}
+function endPosition() {
+painting = false;
+ctx.beginPath();
+}
+function draw(e) {
+if (!painting) return;
+ctx.lineWidth = 4; // Fixed brush size
+ctx.lineCap = "round";
+ctx.strokeStyle = brushColor;
+ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+}
+canvas.addEventListener("mousedown", startPosition);
+canvas.addEventListener("mouseup", endPosition);
+canvas.addEventListener("mousemove", draw);
+document.getElementById("colorPicker").addEventListener("input", function () {
+brushColor = this.value;
+});
+document.getElementById("clearCanvas").addEventListener("click", function () {
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = "#FFEB3B"; // Preserve yellow background color
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+});
+// Display JSON Data
+const collegeData = {
+"name": "Global Institute of Technology",
+"location": "Bangalore, India",
+"established": 2002,
+"principal": "Dr. Priya Nair",
+"departments": 6
+};
+document.getElementById("jsonData").textContent = JSON.stringify(collegeData, null, 4);
+</script>
+</body>
+</html>
